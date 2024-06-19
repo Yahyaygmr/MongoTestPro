@@ -1,0 +1,39 @@
+@model List<MongoTestPro.Dtos.ProductDtos.ResultProductWithCategoryDto>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "ProductList";
+    int count = 0;
+}
+
+<div class="container">
+    <h3>Ürün Listesi</h3>
+    <hr />
+    <table class="table table-hover">
+        <tr class="bg-warning">
+            <th>#</th>
+            <th>Resim</th>
+            <th>Ürün Adı</th>
+            <th>Stok</th>
+            <th>Fiyat</th>
+            <th>Kategori</th>
+            <th>İşlemler</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            count++;
+            <tr>
+                <td>@count</td>
+                <td><img src="@item.ImageUrl" style="height:50px; width:50px; object-fit:cover; border-radius:50%;"/></td>
+                <td>@item.Name</td>
+                <td>@item.Stock</td>
+                <td>@item.Price.ToString("C2")</td>
+                <td>@item.CategoryName</td>
+                <td>
+                    <a href="/Product/DeleteProduct/@item.ProductId">Sil</a>
+                    <a href="/Product/UpdateProduct/@item.ProductId">Güncelle</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <a href="/Product/CreateProduct/">+ Yeni Ürün</a>
+</div>

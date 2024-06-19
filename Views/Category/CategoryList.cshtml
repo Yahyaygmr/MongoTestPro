@@ -1,0 +1,34 @@
+@model List<MongoTestPro.Dtos.CategoryDtos.ResultCategoryDto>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "CategoryList";
+    int count = 0;
+}
+
+<div class="container">
+    <h3>Kategori Listesi</h3>
+    <hr />
+    <table class="table table-hover">
+        <tr class="bg-warning">
+            <th>#</th>
+            <th>Kategori Adı</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            count++;
+            <tr>
+                <td>@count</td>
+                <td>@item.CategoryName</td>
+                <td>
+                    <a href="/Category/DeleteCategory/@item.CategoryId">Sil</a>
+                </td>
+                <td>
+                    <a href="/Category/UpdateCategory/@item.CategoryId">Güncelle</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <a href="/Category/CreateCategory/">+ Yeni Kategori</a>
+</div>
