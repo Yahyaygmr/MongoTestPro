@@ -32,9 +32,9 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+                   @*  <li>
                         <a href="#">About</a>
-                    </li>
+                    </li> *@
                     <li>
                         <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Ürün İşlemleri</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu">
@@ -48,10 +48,37 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#">Müşteri İşlemleri</a>
+                        <a href="#homeCustomer" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Müşteri İşlemleri</a>
+                        <ul class="collapse list-unstyled" id="homeCustomer">
+                            <li>
+                                <a href="/Customer/CustomerList/">Müşteri Listesi</a>
+                            </li>
+                            <li>
+                                <a href="/Customer/CreateCustomer/">Müşteri Oluştur</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
-                        <a href="#">Sipariş İşlemleri</a>
+                        <a href="#homeOrder" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Sipariş İşlemleri</a>
+                        <ul class="collapse list-unstyled" id="homeOrder">
+                            <li>
+                                <a href="/Order/OrderList/">Sipariş Listesi</a>
+                            </li>
+                            <li>
+                                <a href="/Order/CreateOrder/">Sipariş Oluştur</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#homeReport" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Rapor İşlemleri</a>
+                        <ul class="collapse list-unstyled" id="homeReport">
+                            <li>
+                                <a href="/Report/Report/">Excel</a>
+                            </li>
+                            <li>
+                                <a href="/Report/Report/">Pdf</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
 
@@ -80,17 +107,17 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#">Kategoriler</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Category/CategoryList/">Kategoriler</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Ürünler</a>
+                                <a class="nav-link" href="/Product/ProductList/">Ürünler</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Siparişler</a>
+                                <a class="nav-link" href="/Order/OrderList/">Siparişler</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Müşteriler</a>
+                                <a class="nav-link" href="/Customer/CustomerList/">Müşteriler</a>
                             </li>
                         </ul>
                     </div>

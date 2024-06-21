@@ -1,0 +1,45 @@
+﻿@using MongoTestPro.Dtos.CustomerDtos
+@model MongoTestPro.Dtos.OrderDtos.CreateOrderDto
+
+@{
+    ViewData["Title"] = "CreateOrder";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Sipariş Oluştur</h1>
+<div class="container">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="CustomerId" class="control-label">Müşteri</label>
+            <select asp-for="CustomerId" class="form-control">
+                <option>Müşteri Seçin</option>
+                @foreach (var item in (List<ResultCustomerDto>)ViewBag.customers)
+                {
+                    <option value="@item.CustomerId">@item.Name @item.Surname</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="OrderAddress" class="control-label">Sipariş Adresi</label>
+            <input asp-for="OrderAddress" class="form-control" />
+            <span asp-validation-for="OrderAddress" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="OrderDescription" class="control-label">Sipariş Notu</label>
+            <input asp-for="OrderDescription" class="form-control" />
+            <span asp-validation-for="OrderDescription" class="text-danger"></span>
+        </div>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Status" />
+                <label class="form-check-label">Aktif mi?</label>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Oluştur" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+

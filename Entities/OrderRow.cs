@@ -15,5 +15,7 @@ namespace MongoTestPro.Entities
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string OrderId { get; set; }
+        [BsonRepresentation(BsonType.Decimal128)]
+        public Decimal RowPrice { get; set; }
     }
 }

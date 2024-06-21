@@ -1,32 +1,53 @@
+using AutoMapper;
+using MongoDB.Driver;
 using MongoTestPro.Dtos.OrderDtos;
+using MongoTestPro.Entities;
+using MongoTestPro.Settings;
 
 namespace MongoTestPro.Services.OrderServices
 {
     public class OrderService : IOrderService
     {
-        public Task CreateOrderAsync(CreateOrderDto createOrderDto)
+        private readonly IMongoCollection<Order> _orderCollection;
+        private readonly IMapper _mapper;
+
+        public OrderService(IMapper mapper, IDatabaseSettings databaseSettings)
         {
-            throw new NotImplementedException();
+            _mapper = mapper;
+            var client = new MongoClient(databaseSettings.ConnectionString);
+            var database = client.GetDatabase(databaseSettings.DatabaseName);
+            _orderCollection = database.GetCollection<Order>(databaseSettings.OrderCollectionName);
         }
 
-        public Task DeleteOrderAsync(string id)
+        public async Task CreateOrderAsync(CreateOrderDto createOrderDto)
         {
-            throw new NotImplementedException();
+            var result = _mapper.Map<Order>(createOrderDto);
+            await _orderCollection.InsertOneAsync(result);
         }
 
-        public Task<List<ResultOrderDto>> GetAllOrdersAsync()
+        public async Task DeleteOrderAsync(string id)
         {
-            throw new NotImplementedException();
+            await _orderCollection.DeleteOneAsync(x => x.OrderId == id);
         }
 
-        public Task<GetByIdOrderDto> GetByIdOrderAsync(string id)
+        public async Task<List<ResultOrderDto>> GetAllOrdersAsync()
         {
-            throw new NotImplementedException();
+            var values = await _orderCollection.Find(x => true).ToListAsync();
+            var result = _mapper.Map<List<ResultOrderDto>>(values);
+            return result;
         }
 
-        public Task UpdateOrderAsync(UpdateOrderDto updateOrderDto)
+        public async Task<GetByIdOrderDto> GetByIdOrderAsync(string id)
         {
-            throw new NotImplementedException();
+            var values = await _orderCollection.Find(x => x.OrderId == id).FirstOrDefaultAsync();
+            var result = _mapper.Map<GetByIdOrderDto>(values);
+            return result;
+        }
+
+        public async Task UpdateOrderAsync(UpdateOrderDto updateOrderDto)
+        {
+            var result = _mapper.Map<Order>(updateOrderDto);
+            await _orderCollection.FindOneAndReplaceAsync(x => x.OrderId == updateOrderDto.OrderId, result);
         }
     }
 }
