@@ -1,0 +1,34 @@
+﻿@model List<MongoTestPro.Dtos.OrderDtos.ResultOrderDto>
+@{
+    ViewData["Title"] = "OrderList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<div class="container">
+    <h3>Sipariş Listesi</h3>
+    <hr />
+    <table class="table table-hover">
+        <tr class="bg-warning">
+            <th>#</th>
+            <th>Müşteri Adı</th>
+            <th>Sipariş Tarihi</th>
+            <th>Güncelle</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            count++;
+            <tr>
+                <td>@count</td>
+                <td>@item.CustomerId</td>
+                <td>@item.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
+               
+                <td>
+                    <a href="/Order/UpdateOrder/@item.OrderId">Sipariş Detayı</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <a href="/Order/CreateOrder/">+ Yeni Sipariş Oluştur</a>
+</div>
+

@@ -30,7 +30,8 @@ namespace MongoTestPro.Controllers
 
         public async Task<IActionResult> OrderList()
         {
-            return View();
+            var orders = await _orderService.GetAllOrdersAsync();
+            return View(orders);
         }
         [HttpGet]
         public async Task<IActionResult> CreateOrder()
