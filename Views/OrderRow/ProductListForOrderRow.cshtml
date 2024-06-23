@@ -1,0 +1,58 @@
+﻿@model List<MongoTestPro.Dtos.ProductDtos.ResultProductWithCategoryDto>
+@{
+    ViewData["Title"] = "ProductListForOrderRow";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<h1>Şiparişe Ürün Ekleme</h1>
+<h1>Id: @ViewBag.orderId</h1>
+<hr />
+<h3>Ürün Listesi</h3>
+<table class="table table-hover">
+    <tr class="bg-warning">
+        <th>#</th>
+        <th>Resim</th>
+        <th>Ürün Adı</th>
+        <th>Stok</th>
+        <th>Fiyat</th>
+        <th>Kategori</th>
+        <th>İşlemler</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        count++;
+        <form method="post" class="form-inline" asp-action="CreateRow" asp-controller="OrderRow">
+            <input type="hidden" name="productId" value="@item.ProductId" />
+            <input type="hidden" name="orderId" value="@ViewBag.orderId" />
+        <tr>
+            <td>@count</td>
+            <td><img src="@item.ImageUrl" style="height:50px; width:50px; object-fit:cover; border-radius:50%;" /></td>
+            <td>@item.Name</td>
+            <td>@item.Stock</td>
+            <td>@item.Price.ToString("C2")</td>
+            <td>@item.CategoryName</td>
+            <td>
+                    @if (item.Stock > 0)
+                    {
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="number" max="@item.Stock" class="form-control" name="productCount" placeholder="Adet Giriniz..." required/>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary">Siparişe Ekle</button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    else
+                    {
+                    <span class="text-danger">Ürün Stokta Yok</span>
+                    }
+
+            </td>
+        </tr>
+        </form>
+    }
+</table>
+<a href="/Order/OrderOverview/@ViewBag.orderId" class="btn btn-outline-primary">Sonraki Adım</a>
+

@@ -1,11 +1,13 @@
-namespace MongoTestPro.Dtos.OrderRowDtos
+﻿namespace MongoTestPro.Dtos.OrderRowDtos
 {
-    public class UpdateOrderRowDto
+    public class ResultOrderRowWithProduct
     {
         public string OrderRowId { get; set; }
         public string ProductId { get; set; }
         public int ProductCount { get; set; }
         public string OrderId { get; set; }
         public Decimal RowPrice { get; set; }
+        public string ProductName { get; set; }
+        public string ProductImgUrl { get; set; }
     }
 }

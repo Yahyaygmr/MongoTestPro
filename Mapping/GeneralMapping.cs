@@ -36,6 +36,7 @@ namespace MongoTestPro.Mapping
             CreateMap<OrderRow, CreateOrderRowDto>().ReverseMap();
             CreateMap<OrderRow, UpdateOrderRowDto>().ReverseMap();
             CreateMap<OrderRow, GetByIdOrderRowDto>().ReverseMap();
+            CreateMap<UpdateOrderRowDto, ResultOrderRowDto>().ReverseMap();
         }
     }
 }

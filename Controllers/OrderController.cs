@@ -23,7 +23,6 @@ namespace MongoTestPro.Controllers
 
         public async Task<IActionResult> OrderList()
         {
-
             return View();
         }
         [HttpGet]
@@ -38,7 +37,19 @@ namespace MongoTestPro.Controllers
             order.OrderDate = DateTime.Now;
             var result = _mapper.Map<CreateOrderDto>(order);
             await _orderService.CreateOrderAsync(result);
-            return RedirectToAction("OrderList", new { id = order.OrderId });
+            var gen = await _orderService.GetAllOrdersAsync();
+            var gen1 = gen.FindLast(x => true);
+            return RedirectToAction("ProductListForOrderRow","OrderRow", new { id = gen1.OrderId });
+        }
+        public async Task<IActionResult> OrderOverview(string id)
+        {
+            ViewBag.orderId = id;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> OrderTotalPrice(string id, decimal price)
+        {
+            return RedirectToAction("OrderList");
         }
         public async Task<List<ResultCustomerDto>> GetCustomers()
         {

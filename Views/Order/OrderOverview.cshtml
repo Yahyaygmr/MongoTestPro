@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "OrderOverview";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container">
+    <div>
+        <hr />
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    @await Component.InvokeAsync("OrderOverviewCustomerComponentPartial", new { id = ViewBag.orderId })
+                    @await Component.InvokeAsync("OrderOverviewProductComponentPartial", new { id = ViewBag.orderId })
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a asp-action="Index" asp-controller="Order" asp-area="Admin" class="btn btn-primary form-control">Geri</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a asp-action="Index" asp-controller="Order" asp-area="Admin" class="btn btn-success form-control">Siparişi Tamamla</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
