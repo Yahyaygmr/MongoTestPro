@@ -18,7 +18,5 @@ namespace MongoTestPro.Entities
         public string CustomerId { get; set; }
         [BsonRepresentation(BsonType.Decimal128)]
         public decimal OrderTotalPrice { get; set; }
-
-        public List<OrderRow> OrderRows { get; set; }
     }
 }
