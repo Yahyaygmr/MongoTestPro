@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\main.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\sidebar\.DS_Store" />
     <None Include="wwwroot\sidebar\css\.DS_Store" />
     <None Include="wwwroot\sidebar\css\bootstrap\.DS_Store" />

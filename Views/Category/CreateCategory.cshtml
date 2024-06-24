@@ -2,7 +2,7 @@
 
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "CreateCategory";
+    ViewData["Title"] = "Kategori Oluþtur";
 }
 
 <h1>Kategori Oluþtur</h1>
@@ -13,7 +13,7 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group my-3">
-                <label asp-for="CategoryName" class="control-label"></label>
+                <label asp-for="CategoryName" class="control-label">Kategori Adý</label>
                 <input asp-for="CategoryName" class="form-control" />
                 <span asp-validation-for="CategoryName" class="text-danger"></span>
             </div>

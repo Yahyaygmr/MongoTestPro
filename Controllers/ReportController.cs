@@ -57,6 +57,7 @@ namespace MongoTestPro.Controllers
         }
         public async Task<IActionResult> ExportProductListToExcel()
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var products = await _productService.GetAllProductsWithCategoryAsync();
 
             using (var package = new ExcelPackage())
