@@ -1,4 +1,4 @@
-﻿@model List<MongoTestPro.Dtos.OrderDtos.ResultOrderDto>
+﻿@model List<MongoTestPro.Dtos.OrderDtos.ResultAllOrdersWithCustomer>
 @{
     ViewData["Title"] = "OrderList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -13,6 +13,7 @@
             <th>#</th>
             <th>Müşteri Adı</th>
             <th>Sipariş Tarihi</th>
+            <th>Sil</th>
             <th>Güncelle</th>
         </tr>
         @foreach (var item in Model)
@@ -20,9 +21,11 @@
             count++;
             <tr>
                 <td>@count</td>
-                <td>@item.CustomerId</td>
+                <td>@item.CustomerName @item.CustomerSurname</td>
                 <td>@item.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
-               
+                <td>
+                    <a href="/Order/DeleteOrder/@item.OrderId">Siparişi Sil</a>
+                </td>
                 <td>
                     <a href="/Order/UpdateOrder/@item.OrderId">Sipariş Detayı</a>
                 </td>

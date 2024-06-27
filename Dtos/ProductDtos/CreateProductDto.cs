@@ -10,6 +10,7 @@ namespace MongoTestPro.Dtos.ProductDtos
         public string Price { get; set; }
         public string ImageUrl { get; set; }
         public string CategoryId { get; set; }
+        public IFormFile Image { get; set; }
 
     }
 }

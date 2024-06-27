@@ -31,12 +31,13 @@ namespace MongoTestPro.Mapping
             CreateMap<Order, CreateOrderDto>().ReverseMap();
             CreateMap<Order, UpdateOrderDto>().ReverseMap();
             CreateMap<Order, GetByIdOrderDto>().ReverseMap();
+            CreateMap<Order, ResultAllOrdersWithCustomer>().ReverseMap();
 
             CreateMap<OrderRow, ResultOrderRowDto>().ReverseMap();
             CreateMap<OrderRow, CreateOrderRowDto>().ReverseMap();
             CreateMap<OrderRow, UpdateOrderRowDto>().ReverseMap();
             CreateMap<OrderRow, GetByIdOrderRowDto>().ReverseMap();
-            CreateMap<UpdateOrderRowDto, ResultOrderRowDto>().ReverseMap();
+            CreateMap<OrderRow, ResultOrderRowDto>().ReverseMap();
         }
     }
 }

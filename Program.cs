@@ -2,13 +2,15 @@ using System.Reflection;
 using Microsoft.Extensions.Options;
 using MongoTestPro.Services.CategoryServices;
 using MongoTestPro.Services.CustomerServices;
+using MongoTestPro.Services.GCSServices;
 using MongoTestPro.Services.OrderRowServices;
 using MongoTestPro.Services.OrderServices;
 using MongoTestPro.Services.ProductServices;
 using MongoTestPro.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.Configure<GCSConfigOptions>(builder.Configuration);
+builder.Services.AddSingleton<ICloudStorageService, CloudStorageService>();
 // Add services to the container.
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();

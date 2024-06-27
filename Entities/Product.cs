@@ -13,6 +13,7 @@ namespace MongoTestPro.Entities
         [BsonRepresentation(BsonType.Decimal128)]
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
+        public string? ImageSavedName{ get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         public string CategoryId { get; set; }
 

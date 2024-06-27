@@ -2,6 +2,7 @@ using AutoMapper;
 using MongoDB.Driver;
 using MongoTestPro.Dtos.ProductDtos;
 using MongoTestPro.Entities;
+using MongoTestPro.Services.GCSServices;
 using MongoTestPro.Settings;
 
 namespace MongoTestPro.Services.ProductServices
@@ -11,7 +12,8 @@ namespace MongoTestPro.Services.ProductServices
         private readonly IMongoCollection<Product> _productCollection;
         private readonly IMongoCollection<Category> _cateoryCollection;
         private readonly IMapper _mapper;
-        public ProductService(IMapper mapper, IDatabaseSettings databaseSettings)
+        private readonly ICloudStorageService _cloudStorageService;
+        public ProductService(IMapper mapper, IDatabaseSettings databaseSettings, ICloudStorageService cloudStorageService)
         {
             _mapper = mapper;
             var client = new MongoClient(databaseSettings.ConnectionString);
@@ -19,21 +21,32 @@ namespace MongoTestPro.Services.ProductServices
 
             _productCollection = database.GetCollection<Product>(databaseSettings.ProductCollectionName);
             _cateoryCollection = database.GetCollection<Category>(databaseSettings.CategoryCollectionName);
+            _cloudStorageService = cloudStorageService;
         }
         public async Task CreateProductAsync(CreateProductDto createProductDto)
         {
             var value = _mapper.Map<Product>(createProductDto);
+            string fileGuidName = createProductDto.Image.Name + Guid.NewGuid().ToString(); 
+            await _cloudStorageService.UploadFileAsync(createProductDto.Image, fileGuidName);
+            var url = await _cloudStorageService.GetSignedUrlAsync(fileGuidName, 1);
+            value.ImageUrl = url;
+            value.ImageSavedName = fileGuidName;
             await _productCollection.InsertOneAsync(value);
         }
 
         public async Task DeleteProductAsync(string id)
         {
+            var prd = await _productCollection.Find(x => x.ProductId == id).FirstOrDefaultAsync();
+            if (!string.IsNullOrWhiteSpace(prd.ImageSavedName))
+            {
+                await _cloudStorageService.DeleteFileAsync(prd.ImageSavedName);
+            }
             await _productCollection.DeleteOneAsync(x => x.ProductId == id);
         }
 
         public async Task<List<ResultProductDto>> GetAllProductsAsync()
         {
-            var values = await _productCollection.Find(x=> true).ToListAsync();
+            var values = await _productCollection.Find(x => true).ToListAsync();
             var result = _mapper.Map<List<ResultProductDto>>(values);
             return result;
         }

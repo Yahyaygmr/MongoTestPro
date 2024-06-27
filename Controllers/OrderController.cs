@@ -30,7 +30,7 @@ namespace MongoTestPro.Controllers
 
         public async Task<IActionResult> OrderList()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await _orderService.GetAllOrdersWithCustomerAsync();
             return View(orders);
         }
         [HttpGet]
@@ -85,11 +85,26 @@ namespace MongoTestPro.Controllers
             await _orderService.UpdateOrderAsync(result2);
             return RedirectToAction("OrderList");
         }
+        public async Task<IActionResult> DeleteOrder(string id)
+        {
+            var rows = await _orderRowService.GetAllOrderRowsAsync();
+            if (rows.Any(x=>x.OrderId == id))
+            {
+                var rowList = rows.Where(x=>x.OrderId == id).ToList();
+                foreach (var row in rowList)
+                {
+                    await _orderRowService.DeleteOrderRowAsync(row.OrderRowId);
+                }
+            }
+            await _orderService.DeleteOrderAsync(id);
+            return RedirectToAction("OrderList", "Order");
+        }
         public async Task<List<ResultCustomerDto>> GetCustomers()
         {
             var values = await _customerService.GetAllCustomersAsync();
 
             return values;
         }
+       
     }
 }
