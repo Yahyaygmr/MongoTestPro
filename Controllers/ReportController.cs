@@ -23,7 +23,7 @@ namespace MongoTestPro.Controllers
 
         public async Task<IActionResult> ExportOrderListToPdf()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await _orderService.GetAllOrdersWithCustomerAsync();
 
             using (var ms = new MemoryStream())
             {
@@ -35,6 +35,7 @@ namespace MongoTestPro.Controllers
 
                 table.AddCell("#");
                 table.AddCell("Müşteri Adı");
+                table.AddCell("Müşteri Tel");
                 table.AddCell("Sipariş Tarihi");
                 table.AddCell("Adres");
                 table.AddCell("Toplam Tutar (TL)");
@@ -44,7 +45,8 @@ namespace MongoTestPro.Controllers
                 {
                     count++;
                     table.AddCell($"{count}");
-                    table.AddCell(order.CustomerId);
+                    table.AddCell(order.CustomerName);
+                    table.AddCell(order.CustomerPhoneNumber);
                     table.AddCell(order.OrderDate.ToString("dd MMM yyyy HH:mm"));
                     table.AddCell(order.OrderAddress);
                     table.AddCell(order.OrderTotalPrice.ToString("c"));

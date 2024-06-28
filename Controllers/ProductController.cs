@@ -36,6 +36,8 @@ namespace MongoTestPro.Controllers
         public IActionResult CreateProduct(CreateProductDto createProductDto)
         {
             _productService.CreateProductAsync(createProductDto);
+            // 3 saniye bekle
+            Thread.Sleep(4000);
 
             return RedirectToAction("ProductList");
         }

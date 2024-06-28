@@ -10,20 +10,17 @@ namespace MongoTestPro.Services.GCSServices
         private readonly GoogleCredential googleCredential;
         private readonly StorageClient storageClient;
         private readonly string bucketName;
-
         public CloudStorageService(IConfiguration configuration)
         {
             googleCredential = GoogleCredential.FromFile(configuration.GetValue<string>("GCSAuthFile"));
             storageClient = StorageClient.Create(googleCredential);
             bucketName = configuration.GetValue<string>("GCSBucketName");
         }
-
         public async Task<string> UploadFileAsync(IFormFile imageFile, string fileNameForStorage)
         {
             var memoryStream = new MemoryStream();
             await imageFile.CopyToAsync(memoryStream);
             memoryStream.Position = 0; // MemoryStream'in pozisyonunu sıfırla
-
             try
             {
                 var dataObject = await storageClient.UploadObjectAsync(bucketName, fileNameForStorage, null, memoryStream);
@@ -36,8 +33,6 @@ namespace MongoTestPro.Services.GCSServices
                 throw; // veya hata mesajını döndürebilirsiniz: return $"Hata: {ex.Message}";
             }
         }
-
-
         public async Task DeleteFileAsync(string fileNameForStorage)
         {
             await storageClient.DeleteObjectAsync(bucketName, fileNameForStorage);

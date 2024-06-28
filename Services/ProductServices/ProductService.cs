@@ -24,7 +24,7 @@ namespace MongoTestPro.Services.ProductServices
         }
         public async Task CreateProductAsync(CreateProductDto createProductDto)
         {
-            if(createProductDto.ImageFile != null)
+            if (createProductDto.ImageFile != null)
             {
                 string fileNameForStorage = FormFileName(createProductDto.Name, createProductDto.ImageFile.FileName);
                 createProductDto.ImageUrl = await _cloudStorageService.UploadFileAsync(createProductDto.ImageFile, fileNameForStorage);
@@ -39,11 +39,16 @@ namespace MongoTestPro.Services.ProductServices
             {
                 throw new Exception(ex.ToString());
             }
-           
+
         }
 
         public async Task DeleteProductAsync(string id)
         {
+            var values = await _productCollection.Find(x => x.ProductId == id).FirstOrDefaultAsync();
+            if (values.ImageStorageName != null)
+            {
+                await _cloudStorageService.DeleteFileAsync(values.ImageStorageName);
+            }
             await _productCollection.DeleteOneAsync(x => x.ProductId == id);
         }
 
@@ -84,6 +89,23 @@ namespace MongoTestPro.Services.ProductServices
 
         public async Task UpdateProductAsync(UpdateProductDto updateProductDto)
         {
+            try
+            {
+                if (updateProductDto.ImageStorageName != null)
+                {
+                    await _cloudStorageService.DeleteFileAsync(updateProductDto.ImageStorageName);
+                }
+                if (updateProductDto.ImageFile != null)
+                {
+                    string fileNameForStorage = FormFileName(updateProductDto.Name, updateProductDto.ImageFile.FileName);
+                    updateProductDto.ImageUrl = await _cloudStorageService.UploadFileAsync(updateProductDto.ImageFile, fileNameForStorage);
+                    updateProductDto.ImageStorageName = fileNameForStorage;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
             var values = _mapper.Map<Product>(updateProductDto);
 
             await _productCollection.FindOneAndReplaceAsync(x => x.ProductId == updateProductDto.ProductId, values);

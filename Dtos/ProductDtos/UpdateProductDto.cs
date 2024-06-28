@@ -12,7 +12,6 @@ namespace MongoTestPro.Dtos.ProductDtos
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
         public string? ImageStorageName{ get; set; }
-        [NotMapped]
         public IFormFile ImageFile { get; set; }
         public string CategoryId { get; set; }
 
