@@ -7,92 +7,42 @@ namespace MongoTestPro.Services.GCSServices
 {
     public class CloudStorageService : ICloudStorageService
     {
-        private readonly GCSConfigOptions _options;
-        private readonly ILogger<CloudStorageService> _logger;
-        private readonly GoogleCredential _googleCredential;
+        private readonly GoogleCredential googleCredential;
+        private readonly StorageClient storageClient;
+        private readonly string bucketName;
 
-        public CloudStorageService(IOptions<GCSConfigOptions> options, ILogger<CloudStorageService> logger)
+        public CloudStorageService(IConfiguration configuration)
         {
-            _options = options.Value;
-            _logger = logger;
-
-            try
-            {
-                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                if (environment == Environments.Production)
-                {
-                    // Store the json file in Secrets.
-                    _googleCredential = GoogleCredential.FromJson(_options.GCSAuthFile);
-                }
-                else
-                {
-                    _googleCredential = GoogleCredential.FromFile(_options.GCSAuthFile);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{ex.Message}");
-                throw;
-            }
+            googleCredential = GoogleCredential.FromFile(configuration.GetValue<string>("GCSAuthFile"));
+            storageClient = StorageClient.Create(googleCredential);
+            bucketName = configuration.GetValue<string>("GCSBucketName");
         }
-        public async Task DeleteFileAsync(string fileNameToDelete)
+
+        public async Task<string> UploadFileAsync(IFormFile imageFile, string fileNameForStorage)
         {
+            var memoryStream = new MemoryStream();
+            await imageFile.CopyToAsync(memoryStream);
+            memoryStream.Position = 0; // MemoryStream'in pozisyonunu sıfırla
+
             try
             {
-                using (var storageClient = StorageClient.Create(_googleCredential))
-                {
-                    await storageClient.DeleteObjectAsync(_options.GCSBucketName, fileNameToDelete);
-                }
-                _logger.LogInformation($"File {fileNameToDelete} deleted");
+                var dataObject = await storageClient.UploadObjectAsync(bucketName, fileNameForStorage, null, memoryStream);
+                return dataObject.MediaLink;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error occured while deleting file {fileNameToDelete}: {ex.Message}");
-                throw;
+                // Hata yönetimi: Hata mesajını döndürebilir veya kaydedebilirsiniz
+                Console.WriteLine($"Hata: {ex.Message}");
+                throw; // veya hata mesajını döndürebilirsiniz: return $"Hata: {ex.Message}";
             }
         }
 
-        public async Task<string> GetSignedUrlAsync(string fileNameToRead, int timeOutInMinutes = 30)
-        {
-            try
-            {
-                var sac = _googleCredential.UnderlyingCredential as ServiceAccountCredential;
-                var urlSigner = UrlSigner.FromServiceAccountCredential(sac);
-                // provides limited permission and time to make a request: time here is mentioned for 30 minutes.
-                var signedUrl = await urlSigner.SignAsync(_options.GCSBucketName, fileNameToRead, TimeSpan.FromMinutes(timeOutInMinutes));
-                _logger.LogInformation($"Signed url obtained for file {fileNameToRead}");
-                return signedUrl.ToString();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error occured while obtaining signed url for file {fileNameToRead}: {ex.Message}");
-                throw;
-            }
-        }
 
-        public async Task<string> UploadFileAsync(IFormFile fileToUpload, string fileNameToSave)
+        public async Task DeleteFileAsync(string fileNameForStorage)
         {
-            try
-            {
-                _logger.LogInformation($"Uploading: file {fileNameToSave} to storage {_options.GCSBucketName}");
-                using (var memoryStream = new MemoryStream())
-                {
-                    await fileToUpload.CopyToAsync(memoryStream);
-                    // Create Storage Client from Google Credential
-                    using (var storageClient = StorageClient.Create(_googleCredential))
-                    {
-                        // upload file stream
-                        var uploadedFile = await storageClient.UploadObjectAsync(_options.GCSBucketName, fileNameToSave, fileToUpload.ContentType, memoryStream);
-                        _logger.LogInformation($"Uploaded: file {fileNameToSave} to storage {_options.GCSBucketName}");
-                        return uploadedFile.MediaLink;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error while uploading file {fileNameToSave}: {ex.Message}");
-                throw;
-            }
+            await storageClient.DeleteObjectAsync(bucketName, fileNameForStorage);
         }
     }
 }
+
+

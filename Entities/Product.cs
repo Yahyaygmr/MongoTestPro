@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MongoTestPro.Entities
 {
@@ -13,7 +14,7 @@ namespace MongoTestPro.Entities
         [BsonRepresentation(BsonType.Decimal128)]
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
-        public string? ImageSavedName{ get; set; }
+        public string? ImageStorageName { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         public string CategoryId { get; set; }
 

@@ -18,29 +18,32 @@ namespace MongoTestPro.Services.ProductServices
             _mapper = mapper;
             var client = new MongoClient(databaseSettings.ConnectionString);
             var database = client.GetDatabase(databaseSettings.DatabaseName);
-
             _productCollection = database.GetCollection<Product>(databaseSettings.ProductCollectionName);
             _cateoryCollection = database.GetCollection<Category>(databaseSettings.CategoryCollectionName);
             _cloudStorageService = cloudStorageService;
         }
         public async Task CreateProductAsync(CreateProductDto createProductDto)
         {
+            if(createProductDto.ImageFile != null)
+            {
+                string fileNameForStorage = FormFileName(createProductDto.Name, createProductDto.ImageFile.FileName);
+                createProductDto.ImageUrl = await _cloudStorageService.UploadFileAsync(createProductDto.ImageFile, fileNameForStorage);
+                createProductDto.ImageStorageName = fileNameForStorage;
+            }
             var value = _mapper.Map<Product>(createProductDto);
-            string fileGuidName = createProductDto.Image.Name + Guid.NewGuid().ToString(); 
-            await _cloudStorageService.UploadFileAsync(createProductDto.Image, fileGuidName);
-            var url = await _cloudStorageService.GetSignedUrlAsync(fileGuidName, 1);
-            value.ImageUrl = url;
-            value.ImageSavedName = fileGuidName;
-            await _productCollection.InsertOneAsync(value);
+            try
+            {
+                await _productCollection.InsertOneAsync(value);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+           
         }
 
         public async Task DeleteProductAsync(string id)
         {
-            var prd = await _productCollection.Find(x => x.ProductId == id).FirstOrDefaultAsync();
-            if (!string.IsNullOrWhiteSpace(prd.ImageSavedName))
-            {
-                await _cloudStorageService.DeleteFileAsync(prd.ImageSavedName);
-            }
             await _productCollection.DeleteOneAsync(x => x.ProductId == id);
         }
 
@@ -84,6 +87,12 @@ namespace MongoTestPro.Services.ProductServices
             var values = _mapper.Map<Product>(updateProductDto);
 
             await _productCollection.FindOneAndReplaceAsync(x => x.ProductId == updateProductDto.ProductId, values);
+        }
+        private static string FormFileName(string title, string fileName)
+        {
+            var fileExtension = Path.GetExtension(fileName);
+            var fileNameForStorage = $"{title}-{DateTime.Now.ToString("yyyyMMddHHmmss")}{fileExtension}";
+            return fileNameForStorage;
         }
     }
 }
