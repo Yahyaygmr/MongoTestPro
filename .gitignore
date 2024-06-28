@@ -362,4 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 # Specific file to ignore
-C:/Users/YAHYA/Desktop/M&Y/Ders/Proje8/test/MongoDbTestPro/wwwroot/spheric-engine-427513-v8-a9f5e25f71ae.json
+./spheric-engine-427513-v8-a9f5e25f71ae.json
