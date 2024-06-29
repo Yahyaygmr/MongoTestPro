@@ -110,11 +110,19 @@ namespace MongoTestPro.Services.ProductServices
 
             await _productCollection.FindOneAndReplaceAsync(x => x.ProductId == updateProductDto.ProductId, values);
         }
+        public async Task UpdateProductCountAsync(UpdateProductDto updateProductDto)
+        {
+            var values = _mapper.Map<Product>(updateProductDto);
+
+            await _productCollection.FindOneAndReplaceAsync(x => x.ProductId == updateProductDto.ProductId, values);
+        }
         private static string FormFileName(string title, string fileName)
         {
             var fileExtension = Path.GetExtension(fileName);
             var fileNameForStorage = $"{title}-{DateTime.Now.ToString("yyyyMMddHHmmss")}{fileExtension}";
             return fileNameForStorage;
         }
+
+        
     }
 }

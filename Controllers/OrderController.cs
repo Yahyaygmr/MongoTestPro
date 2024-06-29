@@ -33,6 +33,35 @@ namespace MongoTestPro.Controllers
             var orders = await _orderService.GetAllOrdersWithCustomerAsync();
             return View(orders);
         }
+        public async Task<IActionResult> OrderDetail(string id)
+        {
+            //var order = await _orderService.GetByIdOrderAsync(id);
+            //ViewBag.OrderCustomerId = order.CustomerId;
+            ViewBag.orderId = id;
+            var rows = await _orderRowService.GetAllOrderRowsAsync();
+            var rowList = rows.Where(x => x.OrderId == id).ToList();
+            List<ResultOrderRowWithProduct> resultOrderRowWithOrder = new List<ResultOrderRowWithProduct>();
+            decimal totalPrice = 0;
+            foreach (var row in rowList)
+            {
+                totalPrice += row.RowPrice;
+                var product = await _productService.GetByIdProductAsync(row.ProductId);
+                var resultOrder = new ResultOrderRowWithProduct
+                {
+                    OrderId = row.OrderId,
+                    OrderRowId = row.OrderRowId,
+                    ProductCount = row.ProductCount,
+                    ProductId = row.ProductId,
+                    RowPrice = row.RowPrice,
+                    ProductImgUrl = product.ImageUrl,
+                    ProductName = product.Name,
+                    ProductPrice = product.Price,
+                };
+                resultOrderRowWithOrder.Add(resultOrder);
+            }
+            ViewBag.totalPrice = totalPrice;
+            return View(resultOrderRowWithOrder);
+        }
         [HttpGet]
         public async Task<IActionResult> CreateOrder()
         {
@@ -69,6 +98,7 @@ namespace MongoTestPro.Controllers
                     RowPrice = row.RowPrice,
                     ProductImgUrl = product.ImageUrl,
                     ProductName = product.Name,
+                    ProductPrice = product.Price,
                 };
                 resultOrderRowWithOrder.Add(resultOrder);
             }

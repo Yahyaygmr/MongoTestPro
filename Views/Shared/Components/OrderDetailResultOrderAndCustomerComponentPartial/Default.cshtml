@@ -1,0 +1,22 @@
+﻿@model MongoTestPro.Dtos.OrderDtos.ResultOrderByIdWithCustomer
+
+<div class="container m-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="text-warning">Müşteri Bilgileri</h4>
+            <hr />
+            <p><strong>Adı Soyadı:</strong> @Model.CustomerName @Model.CustomerSurname</p>
+            <p><strong>Mail Adresi:</strong> @Model.CustomerEmail</p>
+            <p><strong>Adresi:</strong> @Model.CustomerAddress</p>
+            <p><strong>Telefon Numarası:</strong> @Model.CustomerPhoneNumber</p>
+        </div>
+        <div class="col-md-6 text-left">
+            <h4 class="text-warning">Sipariş Bilgileri</h4>
+            <hr />
+            <p><strong>Sipariş Tarihi :</strong> @Model.OrderDate.ToString("dd MMM yyyy")</p>
+            <p><strong>Sipariş Saati :</strong> @Model.OrderDate.ToString("HH:mm")</p>
+            <p><strong>Sipariş Adresi:</strong> @Model.OrderAddress</p>
+            <p><strong>Sipariş Açıklaması :</strong> @Model.OrderDescription</p>
+        </div>
+    </div>
+</div>

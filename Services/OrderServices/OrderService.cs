@@ -4,6 +4,7 @@ using MongoTestPro.Dtos.OrderDtos;
 using MongoTestPro.Entities;
 using MongoTestPro.Services.CustomerServices;
 using MongoTestPro.Settings;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace MongoTestPro.Services.OrderServices
 {
@@ -46,7 +47,7 @@ namespace MongoTestPro.Services.OrderServices
             var orderList = new List<ResultAllOrdersWithCustomer>();
             foreach (var order in orders)
             {
-                var customer =await _customerCollection.Find(x=> x.CustomerId == order.CustomerId).FirstOrDefaultAsync();
+                var customer = await _customerCollection.Find(x => x.CustomerId == order.CustomerId).FirstOrDefaultAsync();
                 var orderWithCustomer = new ResultAllOrdersWithCustomer
                 {
                     OrderId = order.OrderId,
@@ -73,6 +74,28 @@ namespace MongoTestPro.Services.OrderServices
             var values = await _orderCollection.Find(x => x.OrderId == id).FirstOrDefaultAsync();
             var result = _mapper.Map<GetByIdOrderDto>(values);
             return result;
+        }
+
+        public async Task<ResultOrderByIdWithCustomer> GetOrderByIdWithCustomerAsync(string id)
+        {
+            var order = await _orderCollection.Find(x => x.OrderId == id).FirstOrDefaultAsync();
+            var customer = await _customerCollection.Find(x => x.CustomerId == order.CustomerId).FirstOrDefaultAsync();
+            var orderWithCustomer = new ResultOrderByIdWithCustomer
+            {
+                OrderId = order.OrderId,
+                OrderAddress = order.OrderAddress,
+                OrderDate = order.OrderDate,
+                Status = order.Status,
+                OrderTotalPrice = order.OrderTotalPrice,
+                OrderDescription = order.OrderDescription,
+                CustomerId = order.CustomerId,
+                CustomerName = customer.Name,
+                CustomerSurname = customer.Surname,
+                CustomerAddress = customer.Address,
+                CustomerEmail = customer.Email,
+                CustomerPhoneNumber = customer.PhoneNumber,
+            };
+            return orderWithCustomer;
         }
 
         public async Task UpdateOrderAsync(UpdateOrderDto updateOrderDto)

@@ -8,6 +8,7 @@ namespace MongoTestPro.Services.ProductServices
         Task<List<ResultProductWithCategoryDto>> GetAllProductsWithCategoryAsync();
         Task CreateProductAsync(CreateProductDto createProductDto);
         Task UpdateProductAsync(UpdateProductDto updateProductDto);
+        Task UpdateProductCountAsync(UpdateProductDto updateProductDto);
         Task DeleteProductAsync(string id);
         Task<GetByIdProductDto> GetByIdProductAsync(string id);
     } 

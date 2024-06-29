@@ -59,7 +59,7 @@ namespace MongoTestPro.Controllers
             product.Stock -= productCount;
             var result = _mapper.Map<Product>(product);
             var endResult = _mapper.Map<UpdateProductDto>(result);
-            await _productService.UpdateProductAsync(endResult);
+            await _productService.UpdateProductCountAsync(endResult);
 
             return RedirectToAction("ProductListForOrderRow", "OrderRow", new { id = orderId });
         }
